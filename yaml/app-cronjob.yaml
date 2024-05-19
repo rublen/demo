@@ -1,0 +1,25 @@
+---
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: app-cron
+spec:
+  schedule: "*/1 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: app
+            image: gcr.io/k8s-k9s-kub/demo:v2.0.0
+            ports:
+            - name: http
+              containerPort: 8080
+            volumeMounts:
+            - name: data
+              mountPath: /var/lib/app
+          restartPolicy: OnFailure
+          volumes:
+          - name: data
+            hostPath:
+              path: /var/lib/app
